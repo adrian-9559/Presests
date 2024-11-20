@@ -2,18 +2,21 @@ import React, { useState } from 'react';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, isWeekend } from 'date-fns';
 
 const Calendar = () => {
-    const [currentMonth, setCurrentMonth] = useState(new Date()); // Estado para el mes actual
-    const [currentDay, setCurrentDay] = useState(new Date()); // Estado para el día actual
-    const [selectedDate, setSelectedDate] = useState(new Date()); // Estado para la fecha seleccionada
+    // Estado para manejar el mes actual
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+    // Estado para manejar el día actual
+    const [currentDay, setCurrentDay] = useState(new Date());
+    // Estado para manejar la fecha seleccionada por el usuario
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
-    // Función para avanzar al siguiente mes
+    // Función que avanza al siguiente mes
     const nextMonth = () => setCurrentMonth(addMonths(currentMonth, 1));
-    // Función para retroceder al mes anterior
+    // Función que retrocede al mes anterior
     const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
-    // Función para manejar el clic en una fecha
+    // Función para actualizar la fecha seleccionada cuando el usuario hace clic en un día
     const onDateClick = (day: Date) => setSelectedDate(day);
 
-    // Renderiza el encabezado del calendario con los botones de navegación
+    // Renderiza el encabezado del calendario con los botones para navegar entre meses
     const renderHeader = () => (
         <div className="flex justify-between items-center mb-4">
             <button onClick={prevMonth} className="text-black text-lg font-bold px-2 py-1 bg-[#94d8be] rounded">{"<"}</button>
@@ -22,16 +25,16 @@ const Calendar = () => {
         </div>
     );
 
-    // Renderiza los días de la semana (Lunes, Martes, etc.)
+    // Renderiza los nombres abreviados de los días de la semana (Lun, Mar, etc.)
     const renderDays = () => {
         const days = [];
-        const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 }); // La semana empieza en lunes
+        const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 }); // Configura el inicio de la semana en lunes
 
-        // Itera sobre los días de la semana
+        // Genera los nombres de los días
         for (let i = 0; i < 7; i++) {
             days.push(
                 <div className="w-full text-center font-bold" key={i}>
-                    {format(addDays(startDate, i), 'EEEEEE')}
+                    {format(addDays(startDate, i), 'EEEEEE')} {/* Muestra la abreviatura del día */}
                 </div>
             );
         }
@@ -39,55 +42,55 @@ const Calendar = () => {
         return <div className="flex justify-center">{days}</div>;
     };
 
-    // Renderiza las celdas del calendario con los días del mes
+    // Renderiza las celdas con los días del mes
     const renderCells = () => {
-        const monthStart = startOfMonth(currentMonth); // Inicio del mes actual
+        const monthStart = startOfMonth(currentMonth); // Primer día del mes actual
         const startDate = startOfWeek(monthStart, { weekStartsOn: 1 }); // Inicio de la semana del primer día del mes
         const endDate = endOfWeek(endOfMonth(monthStart), { weekStartsOn: 1 }); // Fin de la semana del último día del mes
-        const rows = [];
-        let days = [];
-        let day = startDate;
+        const rows = []; // Contenedor para las filas (semanas) del calendario
+        let days = []; // Contenedor para los días en cada fila
+        let day = startDate; // Día inicial para iterar
 
-        // Itera sobre los días desde el inicio hasta el fin del mes
+        // Itera desde el inicio hasta el fin del rango de días visible en el calendario
         while (day <= endDate) {
             for (let i = 0; i < 7; i++) {
-                const cloneDay = day;
+                const cloneDay = day; // Clona la referencia para manejar clics sin problemas
                 days.push(
                     <div
-                        className={`w-full h-16 flex justify-center cursor-pointer rounded-lg ${!isSameMonth(day, monthStart) ? 'text-gray-400' : ''} ${isSameDay(day, currentDay) ? 'bg-[#94d8be] text-black rounded-md' : 'bg-default-50'} ${isWeekend(day) ? 'bg-red-100 text-red-600' : ''} `}
-                        key={day.toString()}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => onDateClick(cloneDay)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                onDateClick(cloneDay);
+                        className={`w-full h-16 flex justify-center cursor-pointer rounded-lg 
+                            ${!isSameMonth(day, monthStart) ? 'text-gray-400' : ''} /* Días fuera del mes actual */
+                            ${isSameDay(day, currentDay) ? 'bg-[#94d8be] text-black rounded-md' : 'bg-default-50'} /* Día actual */
+                            ${isWeekend(day) ? 'bg-red-100 text-red-600' : ''} /* Fin de semana */
+                        `}
+                        key={day.toString()} // Clave única para cada día
+                        role="button" // Accesibilidad: indica que es interactivo
+                        tabIndex={0} // Accesibilidad: permite navegar con teclado
+                        onClick={() => onDateClick(cloneDay)} // Maneja el clic en un día
+                        onKeyDown={(e) => { 
+                            if (e.key === 'Enter' || e.key === ' ') { 
+                                onDateClick(cloneDay); 
                             }
-                        }}
+                        }} // Soporte para seleccionar con teclado
                     >
-                        <span>{format(day, 'd')}</span>
+                        <span>{format(day, 'd')}</span> {/* Muestra el número del día */}
                     </div>
                 );
                 day = addDays(day, 1); // Avanza al siguiente día
             }
+            // Agrega la fila actual al calendario y reinicia la fila para la próxima semana
             rows.push(<div className="flex gap-1" key={day.toString()}>{days}</div>);
-            days = []; // Reinicia los días para la siguiente semana
+            days = [];
         }
 
-        return <div className='grid gap-1'>{rows}</div>;
+        return <div className="grid gap-1">{rows}</div>; // Contenedor de las filas (semanas)
     };
 
+    // Renderiza el calendario completo
     return (
         <div className="p-4 rounded-lg shadow-md">
-            <section>
-                {renderHeader()}
-            </section>
-            <section>
-                {renderDays()}
-            </section>
-            <section>
-                {renderCells()}
-            </section>
+            <section>{renderHeader()}</section> {/* Encabezado del calendario */}
+            <section>{renderDays()}</section> {/* Días de la semana */}
+            <section>{renderCells()}</section> {/* Días del mes */}
         </div>
     );
 };
