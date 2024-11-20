@@ -30,6 +30,43 @@ Install the required libraries:
 npm install react date-fns tailwindcss
 ```
 
+Alternatively, if you use yarn:
+
+```
+yarn add react date-fns tailwindcss
+```
+
+### 3. Setting up TailwindCSS
+
+If TailwindCSS is not already set up in your project, follow these steps:
+
+#### 1. Install TailwindCSS and its dependencies:
+
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init
+```
+
+#### 2. Configure Tailwind in your tailwind.config.js file:
+
+```javascript
+module.exports = {
+    content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+    theme: {
+        extend: {},
+    },
+    plugins: [],
+};
+```
+
+#### 3. Add Tailwind directives to your CSS file:
+
+´´´css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+´´´
+
 ---
 
 ## Usage
