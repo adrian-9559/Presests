@@ -61,11 +61,11 @@ module.exports = {
 
 #### 3. Add Tailwind directives to your CSS file:
 
-´´´css
+```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-´´´
+```
 
 ---
 
