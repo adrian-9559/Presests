@@ -93,6 +93,6 @@ This project is licensed under the MIT License.
 Contributions are welcome! Feel free to open issues or submit pull requests. Make sure to adhere to the Contributor Covenant.
 
 ## Author
-Developed by adrian_9559. If you have any questions or feedback, reach out via adrian.escribano3@gmail.com.
+Developed by adrian-9559. If you have any questions or feedback, reach out via adrian.escribano3@gmail.com.
 
 Enjoy using the React Calendar! 🎉
