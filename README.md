@@ -31,7 +31,7 @@ To use a component from this library, follow the installation instructions below
 Install the component library:
 
    ```bash
-   npm install @adrian-9559/presets/...
+   npm install @adrian-9559/presets
    ```
 
 ## License
